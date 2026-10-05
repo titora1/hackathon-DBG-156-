@@ -1,0 +1,11 @@
+# OBSERVATIONS: Hi.Events Concurrency Analysis
+
+## 1. System Context
+The original Hi.Events system is built on a PHP 8.3 / Laravel 13 backend utilizing PostgreSQL 15 for primary data storage. 
+The system is designed for standard event ticketing but fundamentally fails under extreme "Tatkal-style" traffic bursts, specifically when 5,000 students hit the server at 6:00 PM[cite: 3].
+
+## 2. Bottleneck Breakdown
+* Order Creation & Checkout Holds: The current architecture manages ticket allocation and inventory locks using standard relational PostgreSQL record locks via the Eloquent ORM. 
+* Race Conditions: Under a 5,000 req/sec burst, concurrent checkout requests read the ticket tier capacity before previous transactions finish committing. This allows multiple transactions to pass the available inventory check simultaneously, causing severe overselling of the final tickets.
+* Inefficient Expiration: Checkout hold expirations rely on asynchronous polling and background scheduler cycles rather than native, instant Time-To-Live (TTL) events. 
+* QR Code Scanning: Check-in relies on read-after-write database queries. Fast, simultaneous network requests from multiple turnstiles cause read-lag, allowing duplicate check-ins for the same QR code.
