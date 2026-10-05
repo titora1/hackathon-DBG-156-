@@ -1,0 +1,11 @@
+Team ID: DBG-156
+Team: The Deconstructors
+Card: Rush-Proof Event Ticketing
+Original: https://github.com/hi-events/hi.events
+Commit studied: 4f9a2c1
+Run: pip install fastapi uvicorn redis fakeredis python-dotenv && python -m uvicorn main:app --port 8001
+Improvements we built:
+1. Fix: Redis-backed in-memory atomic state management (DECR, SETEX, SETNX) eliminating PostgreSQL row-locking collisions to handle 5,000-user rushes, automated TTL hold expirations, and duplicate QR scan prevention.
+2. Differentiator: AI-driven traffic sentinel intercepting request headers for scalper bot defense with an automated offline fallback heuristic.
+Libraries / AI used: (FastAPI: lightweight microservice framework), (Fakeredis: synchronous atomic in-memory state engine)
+Deck: deck.pdf (repo root)

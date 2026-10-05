@@ -1,0 +1,14 @@
+# Rush-Proof Event Ticketing Core
+
+A high-performance backend microservice built with **Python, FastAPI, and Redis** designed to handle massive ticket rushes without database bottlenecks.
+
+## Features
+* **Zero Overselling:** Atomic in-memory Redis decrements.
+* **TTL Holds:** Automatic expiration for unpaid ticket reservations.
+* **Duplicate QR Prevention:** Clash-proof gate check-ins.
+* **AI Bot Defense:** Automated telemetry sentinel with offline fallback.
+
+## Running Locally
+1. Install dependencies:
+   ```bash
+   pip install fastapi uvicorn redis fakeredis python-dotenv
