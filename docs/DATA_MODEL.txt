@@ -1,0 +1,14 @@
+# DATA MODEL
+
+## 1. Redis In-Memory Structures (The Hot-Path)
+* `tier:{tier_id}:capacity` (Integer) -> Atomic counter of remaining tickets.
+* `hold:{hold_id}` (Hash) -> Temporary reservation data.
+  * Fields: `user_id`, `tier_id`, `expires_at`
+  * Features strict TTL matching the `.env` time limit configuration.
+* `qr:status:{qr_hash}` (String) -> Set to "1" upon check-in.
+
+## 2. PostgreSQL Persistent Entities (The Cold-Path)
+* Event: `id`, `name`, `total_capacity`
+* TicketTier: `id`, `event_id`, `name`, `price`, `total_quantity`
+* Order: `id`, `user_id`, `total_amount`, `status` (PENDING, COMPLETED, REFUNDED)
+* Ticket: `id`, `order_id`, `tier_id`, `qr_hash`, `is_checked_in`

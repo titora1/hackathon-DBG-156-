@@ -1,0 +1,15 @@
+# Product Requirements Document: Rush-Proof Ticketing
+
+## 1. Objective
+Re-architect the ticketing engine to flawlessly process a Tatkal-style college fest ticket launch (5,000 passes released at exactly 6:00 PM) without a single instance of overselling, database deadlocking, or duplicate admissions[cite: 3].
+
+## 2. Hard Core Scope
+* Ticket Tiers & Capacity: Enforce strict, global capacity limits across multi-tier allocations (e.g., VIP, General)[cite: 3].
+* Checkout Holds: Provide temporary, atomic reservations for tickets during the payment process[cite: 3].
+* Promos & Refunds: Support discount codes and instant restock of refunded passes[cite: 3].
+* QR Check-In: Provide a real-time validation endpoint for turnstile scanners[cite: 3].
+
+## 3. The 3 Killer Tests (Acceptance Criteria)
+1. Simultaneous Checkout: If two buyers request the exact same final ticket at the exact same millisecond, the system must guarantee exactly one transaction succeeds and the other receives a sold-out error[cite: 3].
+2. Hold Expiry: When an unpaid checkout hold's time limit expires, the seat must instantly free back into the available pool[cite: 3].
+3. QR Double-Scan: A single QR code scanned rapidly across multiple devices cannot be checked in twice[cite: 3].

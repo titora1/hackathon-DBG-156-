@@ -1,0 +1,15 @@
+# ARCHITECTURE: In-Memory Concurrency Engine
+
+## 1. Core Architectural Shift
+To survive the 5,000 req/sec rush and pass the Killer Tests, the system must decouple live inventory from the relational database[cite: 3]. All active capacity counters, reservation holds, and QR scan states will be migrated to Redis. 
+
+## 2. System Components
+* Frontend: Lightweight, functional UI built in React/HTML to trigger APIs.
+* Backend: Python (FastAPI/Flask) or Node.js (Express) to rapidly handle incoming asynchronous requests.
+* Concurrency Store (Redis): Single-threaded atomic operations ensure race conditions are mathematically impossible during the checkout rush. 
+* Persistence Store (PostgreSQL): Stores permanent, finalized records (Users, Paid Orders) only after the high-speed Redis transaction resolves.
+
+## 3. Atomic Operations
+* Ticket Hold: Uses Redis `DECR`. If the counter drops below zero, it rolls back instantly. 
+* Hold Lifecycle: Uses Redis TTL. Expiration triggers a keyspace notification that instantly runs `INCR` to restore inventory.
+* QR Scans: Uses Redis `SETNX` (Set if Not Exists) on the QR hash. Subsequent rapid scans fail instantly in-memory.

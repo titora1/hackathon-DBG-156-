@@ -1,0 +1,11 @@
+# GAPS & IMPROVEMENTS
+
+## 1. The Fix: Atomic Redis Locks
+* Gap: The original Hi.Events PostgreSQL row-locking architecture causes deadlocks and overselling during massive concurrent traffic spikes.
+* Solution: Implement single-threaded Redis Lua scripts and atomic commands (`DECR`, `SETNX`) to definitively block simultaneous race conditions, fulfilling the requirements of Killer Tests 1 and 3[cite: 3].
+
+## 2. The Differentiator: AI-Powered Bot Defense
+* Problem: College fest ticket launches are frequently ruined by automated scalper scripts buying out inventory before real students can load the page.
+* Feature: An AI-driven middleware that evaluates incoming request telemetry (speed, IP frequency, header anomalies) during the 6 PM rush. 
+* Implementation: The system sends request metadata to an AI model to generate a live "bot probability score," blocking malicious scripts instantly. 
+* Fallback: The API key is stored in `.env`. If the key is missing, the application gracefully falls back to standard rate-limiting without crashing, ensuring the core app remains functional for offline judging[cite: 2].

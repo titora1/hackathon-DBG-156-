@@ -1,0 +1,22 @@
+# API SPECIFICATION
+
+## 1. POST /api/tickets/hold
+* Purpose: Atomically claims inventory before payment.
+* Request: `{"user_id": "123", "tier_id": "vip_1"}`
+* Process: Runs Redis `DECR`. Sets TTL on hold.
+* Success (201): Returns `hold_id` and `expires_in` seconds.
+* Error (409): `{"error": "SOLD_OUT"}`
+
+## 2. POST /api/tickets/checkout
+* Purpose: Converts a valid hold into a purchased ticket.
+* Request: `{"hold_id": "hld_456", "payment_token": "tok_xyz"}`
+* Process: Validates hold exists. Writes Order and Ticket to PostgreSQL. Deletes Redis hold.
+* Success (200): Returns `order_id` and `qr_hash`.
+* Error (410): `{"error": "HOLD_EXPIRED"}`
+
+## 3. POST /api/checkin/scan
+* Purpose: Validates QR authenticity.
+* Request: `{"qr_hash": "abc123hash"}`
+* Process: Runs Redis `SETNX qr:status:abc123hash 1`. 
+* Success (200): `{"status": "ACCESS_GRANTED"}`
+* Error (409): `{"error": "ALREADY_CHECKED_IN"}`
